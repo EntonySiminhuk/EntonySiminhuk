@@ -1,6 +1,3 @@
-- 👋 Hi, I’m @EntonySiminhuk
-- 👀 I’m interested in programar
-<!---
-EntonySiminhuk/EntonySiminhuk is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
---->
+Entony Cesar Siminhuk 
+Academico da UTFPR - Engenharia da Computação
+Esse repositorio é destinado a postar todos os meu codigos feito em meio ao mundo academico
