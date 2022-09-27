@@ -3,6 +3,32 @@
 #include <limits.h>
 #include <math.h>
 
+//função criada pelo professor
+#define max(a,b) a > b ? a : b
+
+int maior_preco(int preco[], int tam_h)
+{
+    int i, j, q;
+    int r[tam_h + 1];
+    
+    r[0] = 0;
+    
+    for(i = 1; i <= tam_h; i++)
+    {
+        q = INT_MIN;
+        
+        
+        for(j = 0; j < i; j++)
+            q = max(q,preco[j] + r[i - j - 1]);
+        
+        r[i] = q;
+    }
+    
+    return r[tam_h];
+}
+
+
+// minha função
 int cortar(int t, int n, int preco[])
 {
     int auxs, auxt, s, i;
