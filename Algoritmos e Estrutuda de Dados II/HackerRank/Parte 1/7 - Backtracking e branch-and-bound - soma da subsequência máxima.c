@@ -2,59 +2,229 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 
-int max(int x, int y)
+typedef struct Node Node;
+
+struct Node
 {
-    return (x > y) ? x : y;
+    int item;
+    struct Node *left;
+    struct Node *right;
+};
+
+Node *criar(int item)
+{
+    Node *tree = (Node *)malloc(sizeof(Node));
+
+    tree->item = item;
+    tree->left = NULL;
+    tree->right = NULL;
+
+    return tree;
 }
 
-int subsequencia(int v[], int ini, int fim)
+Node *pesquisar(int item, Node *tree)
 {
-    int m, i, maiore, maiord, maior, s;
-
-    if (fim <= ini)
+    if (tree != NULL)
     {
-        return v[ini];
+        if (item == tree->item)
+            return tree;
+        else if (item < tree->item)
+            return pesquisar(item, tree->left);
+        else
+            return pesquisar(item, tree->right);
     }
-    m = (ini + fim) / 2;
+    else
+        return NULL;
+}
 
-    maiore = -100;
-    s = 0;
-    for (i = m; i >= ini; i--)
+int min(Node *tree)
+{
+    Node *aux = tree;
+
+    if (aux != NULL)
     {
-        s += v[i];
-        if (s > maiore)
+        while (aux->left != NULL)
+            aux = aux->left;
+
+        return aux->item;
+    }
+
+    return INT_MIN;
+}
+
+int max(Node *tree)
+{
+    Node *aux = tree;
+
+    if (aux != NULL)
+    {
+        while (aux->right != NULL)
+            aux = aux->right;
+
+        return aux->item;
+    }
+
+    return INT_MAX;
+}
+
+Node *inserir(int item, Node *tree)
+{
+    if (tree == NULL)
+        tree = criar(item);
+    else if (item < tree->item)
+        tree->left = inserir(item, tree->left);
+    else if (item > tree->item)
+        tree->right = inserir(item, tree->right);
+
+    return tree;
+}
+
+int remover(int item, Node *tree)
+{
+    Node *aux, *auxP, *auxF;
+
+    if (tree != NULL)
+    {
+        if (item < tree->item)
+            remover(item, tree->left);
+        else if (item > tree->item)
+            remover(item, tree->right);
+        else
         {
-            maiore = s;
+            aux = tree;
+            if (aux->left == NULL)
+                tree = tree->right;
+            else if (aux->right == NULL)
+                tree = tree->left;
+            else
+            {
+                auxP = aux->right;
+                auxF = auxP;
+
+                while (auxF->left != NULL)
+                {
+                    auxP = auxF;
+                    auxF = auxF->left;
+                }
+
+                if (auxP != auxF)
+                {
+                    auxP->left = auxF->right;
+                    auxF->left = aux->left;
+                }
+
+                auxF->right = aux->right;
+
+                tree = auxF;
+            }
+
+            free(aux);
+
+            return 1;
         }
     }
 
-    maiord = -100;
-    s = 0;
-    for (i = m + 1; i <= fim; i++)
-    {
-        s += v[i];
-        if (s > maiord)
-        {
-            maiord = s;
-        }
-    }
-
-    maior = max(subsequencia(v, ini, m), subsequencia(v, m + 1, fim));
-
-    return max(maior, maiore + maiord);
+    return 0;
 }
 
-int main(void)
+void imprimirInfix(Node *tree)
 {
-    int n, i;
+    if (tree != NULL)
+    {
+        imprimirInfix(tree->left);
+        printf("\n%i", tree->item);
+        imprimirInfix(tree->right);
+    }
+}
+
+void imprimirPrefix(Node *tree)
+{
+    if (tree != NULL)
+    {
+        printf("\n%i", tree->item);
+        imprimirPrefix(tree->left);
+        imprimirPrefix(tree->right);
+    }
+}
+
+void imprimirPosfix(Node *tree)
+{
+    if (tree != NULL)
+    {
+        imprimirPosfix(tree->left);
+        imprimirPosfix(tree->right);
+        printf("\n%i", tree->item);
+    }
+}
+
+void liberar_arvore(Node *tree)
+{
+    if (tree != NULL)
+    {
+        liberar_arvore(tree->left);
+        liberar_arvore(tree->right);
+        free(tree);
+    }
+}
+
+int altura(Node *tree)
+{
+    int direita = 0, esquerda = 0;
+    if (tree == NULL)
+        return 0;
+    else
+    {
+        esquerda = altura(tree->left) + 1;
+        direita = altura(tree->right) + 1;
+    }
+    if (esquerda > direita)
+    {
+        return esquerda;
+    }
+    else
+    {
+        return direita;
+    }
+}
+
+int conta_no(Node *tree)
+{
+    if (tree == NULL)
+        return 0;
+    else
+        return 1 + conta_no(tree->left) + conta_no(tree->right);
+}
+
+int eh_cheia(Node *tree)
+{
+    return conta_no(tree) == ((int)pow(2, altura(tree) + 1) - 1);
+}
+
+int no_faltantes(Node *tree)
+{
+    int aux, aux2;
+    aux = (pow(2, altura(tree) + 1) - 1);
+    aux2 = conta_no(tree);
+
+    return aux - aux2;
+}
+
+int main()
+{
+    int n, i, item;
+    Node *tree = NULL;
+
     scanf("%d", &n);
-    int v[n];
+
     for (i = 0; i < n; i++)
     {
-        scanf("%d", &v[i]);
+        scanf("%d", &item);
+        tree = inserir(item, tree);
     }
 
-    printf("%d", subsequencia(v, 0, n - 1));
+    printf("%d", no_faltantes(tree));
+
     return 0;
 }
