@@ -1,35 +1,20 @@
-//finalizado
+// finalizado
 #include <stdio.h>
 #include <stdio.h>
 #include <limits.h>
 
-void ordena_maior(int vetor[], int tamanho)
+int soma_max(int vetor[], int n, int i, int soma_m)
 {
-    int i, j;
-    for (i = 0; i < tamanho - 1; i++)
-    {
-        for (j = i; j < tamanho; j++)
-        {
-            if (vetor[i] < vetor[j])
-            {
-                int temp = vetor[i];
-                vetor[i] = vetor[j];
-                vetor[j] = temp;
-            }
-        }
-    }
-}
+    int aux;
 
-int soma_maxima(int vetor[], int n)
-{
-    int i, aux = 0;
-
-    ordena_maior(vetor, n);
-    for (i = 0; i < n; i++)
+    if (i >= n)
+        return soma_m;
+    else if (vetor[i] >= 0)
     {
-        if (vetor[i] > 0)
-            aux = aux + vetor[i];
+        aux = soma_max(vetor, n, i + 1, soma_m + vetor[i]);
     }
+    else
+        aux = soma_max(vetor, n, i + 1, soma_m);
 
     return aux;
 }
@@ -43,7 +28,7 @@ int main(void)
     for (i = 0; i < n; i++)
         scanf("%d", &vetor[i]);
 
-    printf("%d", soma_maxima(vetor, n));
+    printf("%d", soma_max(vetor, n, 0, 0));
 
     return 0;
 }
