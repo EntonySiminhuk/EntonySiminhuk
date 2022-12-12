@@ -4,227 +4,38 @@
 #include <stdlib.h>
 #include <limits.h>
 
-typedef struct Node Node;
-
-struct Node
+int Sub_Sequencia(int vet[], int n)
 {
-    int item;
-    struct Node *left;
-    struct Node *right;
-};
-
-Node *criar(int item)
-{
-    Node *tree = (Node *)malloc(sizeof(Node));
-
-    tree->item = item;
-    tree->left = NULL;
-    tree->right = NULL;
-
-    return tree;
-}
-
-Node *pesquisar(int item, Node *tree)
-{
-    if (tree != NULL)
-    {
-        if (item == tree->item)
-            return tree;
-        else if (item < tree->item)
-            return pesquisar(item, tree->left);
-        else
-            return pesquisar(item, tree->right);
-    }
-    else
-        return NULL;
-}
-
-int min(Node *tree)
-{
-    Node *aux = tree;
-
-    if (aux != NULL)
-    {
-        while (aux->left != NULL)
-            aux = aux->left;
-
-        return aux->item;
-    }
-
-    return INT_MIN;
-}
-
-int max(Node *tree)
-{
-    Node *aux = tree;
-
-    if (aux != NULL)
-    {
-        while (aux->right != NULL)
-            aux = aux->right;
-
-        return aux->item;
-    }
-
-    return INT_MAX;
-}
-
-Node *inserir(int item, Node *tree)
-{
-    if (tree == NULL)
-        tree = criar(item);
-    else if (item < tree->item)
-        tree->left = inserir(item, tree->left);
-    else if (item > tree->item)
-        tree->right = inserir(item, tree->right);
-
-    return tree;
-}
-
-int remover(int item, Node *tree)
-{
-    Node *aux, *auxP, *auxF;
-
-    if (tree != NULL)
-    {
-        if (item < tree->item)
-            remover(item, tree->left);
-        else if (item > tree->item)
-            remover(item, tree->right);
-        else
+    int soma_max = INT_MIN;
+    int i,j,m;
+    for(i = 0; i < n; i++)  
         {
-            aux = tree;
-            if (aux->left == NULL)
-                tree = tree->right;
-            else if (aux->right == NULL)
-                tree = tree->left;
-            else
+            for(j = i; j< n; j++)
             {
-                auxP = aux->right;
-                auxF = auxP;
-
-                while (auxF->left != NULL)
+                int s = 0; 
+                for(m = i; m < j; m++) 
                 {
-                    auxP = auxF;
-                    auxF = auxF->left;
+                    s += vet[m];
+                    if(s <= 0)
+                        break;
                 }
-
-                if (auxP != auxF)
-                {
-                    auxP->left = auxF->right;
-                    auxF->left = aux->left;
-                }
-
-                auxF->right = aux->right;
-
-                tree = auxF;
+                if(s > soma_max)
+                    soma_max = s;
             }
-
-            free(aux);
-
-            return 1;
         }
-    }
-
-    return 0;
-}
-
-void imprimirInfix(Node *tree)
-{
-    if (tree != NULL)
-    {
-        imprimirInfix(tree->left);
-        printf("\n%i", tree->item);
-        imprimirInfix(tree->right);
-    }
-}
-
-void imprimirPrefix(Node *tree)
-{
-    if (tree != NULL)
-    {
-        printf("\n%i", tree->item);
-        imprimirPrefix(tree->left);
-        imprimirPrefix(tree->right);
-    }
-}
-
-void imprimirPosfix(Node *tree)
-{
-    if (tree != NULL)
-    {
-        imprimirPosfix(tree->left);
-        imprimirPosfix(tree->right);
-        printf("\n%i", tree->item);
-    }
-}
-
-void liberar_arvore(Node *tree)
-{
-    if (tree != NULL)
-    {
-        liberar_arvore(tree->left);
-        liberar_arvore(tree->right);
-        free(tree);
-    }
-}
-
-int altura(Node *tree)
-{
-    int direita = 0, esquerda = 0;
-    if (tree == NULL)
-        return 0;
-    else
-    {
-        esquerda = altura(tree->left) + 1;
-        direita = altura(tree->right) + 1;
-    }
-    if (esquerda > direita)
-    {
-        return esquerda;
-    }
-    else
-    {
-        return direita;
-    }
-}
-
-int conta_no(Node *tree)
-{
-    if (tree == NULL)
-        return 0;
-    else
-        return 1 + conta_no(tree->left) + conta_no(tree->right);
-}
-
-int eh_cheia(Node *tree)
-{
-    return conta_no(tree) == ((int)pow(2, altura(tree) + 1) - 1);
-}
-
-int no_faltantes(Node *tree)
-{
-    int aux, aux2;
-    aux = (pow(2, altura(tree) + 1) - 1);
-    aux2 = conta_no(tree);
-
-    return aux - aux2;
+        return soma_max;
 }
 
 int main()
 {
-    int n, i, item;
-    Node *tree = NULL;
-
-    scanf("%d", &n);
-
-    for (i = 0; i < n; i++)
+    int n,i;
+    scanf("%d",&n);
+    int vet[n];
+    
+    for(i=0;i<n;i++)
     {
-        scanf("%d", &item);
-        tree = inserir(item, tree);
+        scanf("%d",&vet[i]);
     }
-
-    printf("%d", no_faltantes(tree));
-
+    printf("%d",Sub_Sequencia(vet,n));
     return 0;
 }
