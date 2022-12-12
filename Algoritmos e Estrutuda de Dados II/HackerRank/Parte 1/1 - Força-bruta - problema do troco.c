@@ -1,69 +1,44 @@
-// finalizado
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 
-void ordena_decrescente(int vetor[], int tamanho)
+int qtd_moedas(int m[], int n, int t, int minimo, int i)
 {
-    int i, j;
-    for (i = 0; i < tamanho - 1; i++)
-    {
-        for (j = i; j < tamanho; j++)
-        {
-            if (vetor[i] < vetor[j])
-            {
-                int temp = vetor[i];
-                vetor[i] = vetor[j];
-                vetor[j] = temp;
-            }
-        }
-    }
-}
+    int aux1, aux2;
 
-void mostrarVetor(int vetor[], int tamanho)
-{
-    int i;
-    for (i = 0; i < tamanho; i++)
+    if (i < n)
     {
-        printf("%d ", vetor[i]);
+        aux1 = qtd_moedas(m, n, t, minimo, i + 1);
+        aux2 = qtd_moedas(m, n, t % m[i], minimo + (t / m[i]), i + 1);
+
+        return aux1 < aux2 ? aux1 : aux2;
     }
-}
-
-int qtd_moedas2(int v[], int n, int troco)
-{
-    int aux = 0;
-    int i;
-
-    for (i = 0; (i < n) && (troco > 0); i++)
+    else
     {
-        aux = troco;
-        while (troco - v[i] >= 0)
-        {
-            troco = troco - v[i];
-            aux = v[i];
-            printf("%d", aux);
-            printf("\n");
-        }
+        if (t > 0)
+            return INT_MAX;
+        else
+            return minimo;
     }
-    return 0;
 }
 
 int main()
 {
+    int i, n, t;
+    int *m;
 
-    int moeda_tamanho, i, v_troco, x;
+    scanf("%d", &t);
+    scanf("%d", &n);
 
-    scanf("%d", &v_troco);
-    scanf("%d", &moeda_tamanho);
-    x = v_troco;
-
-    int vetor[moeda_tamanho];
-
-    for (i = 0; i < moeda_tamanho; i++)
+    m = (int *)malloc(sizeof(int) * n);
+    for (i = 0; i < n; i++)
     {
-        scanf("%d", &vetor[i]);
+        scanf("%d", &m[i]);
     }
-    ordena_decrescente(vetor, moeda_tamanho);
-    qtd_moedas2(vetor, moeda_tamanho, v_troco);
+
+    printf("%d", qtd_moedas(m, n, t, 0, 0));
+
+    return 0;
 }
