@@ -1,6 +1,7 @@
 ## hello, my name is Entony Cesar Siminhuk 
 Sou Academico da UTFPR - Engenharia da Computação
-Tech 👨‍💻
+
+## Tech 👨‍💻
 <div align="center">
   <img height="180em" src="https://github-readme-stats.vercel.app/api?username=EntonySiminhuk&show_icons=true&theme=onedark&include_all_commits=true&count_private=true"/>
   <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EntonySiminhuk&layout=compact&langs_count=7&theme=onedark"/>
